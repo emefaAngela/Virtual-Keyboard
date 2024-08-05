@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect,useState} from 'react';
 
 const keyLayout = [
   [
@@ -75,6 +75,24 @@ const keyLayout = [
 ];
 
 const Keyboard = () => {
+  const [Key, setKey] = useState(null);
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      setKey(event.key);
+    };
+    const handleKeyUp = () => {
+      setKey(null);
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('keyup', handleKeyUp);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('keyup', handleKeyUp);
+    };
+  }, []);
   return (
     <div className="p-4 w-1/2 mx-auto">
       {keyLayout.map((row, rowIndex) => (
@@ -82,7 +100,9 @@ const Keyboard = () => {
           {row.map(({ key, class: keyClass }, keyIndex) => (
             <button
               key={keyIndex}
-              className={` p-2 w-10 h-10 flex items-center justify-center border rounded-sm text-lg ${keyClass}`}
+              className={` p-2 w-10 h-10 flex items-center justify-center border rounded-sm text-lg  ${
+                Key === key ? 'bg-blue-500 text-white' : keyClass
+              }`}
             >
               {Array.isArray(key) ? (
                 <div className="flex flex-col items-center justify-center">
@@ -96,6 +116,7 @@ const Keyboard = () => {
           ))}
         </div>
       ))}
+      {/* <div> {key ? `Key pressed: ${key}` : 'Press any key...'}</div> */}
     </div>
   );
 };
