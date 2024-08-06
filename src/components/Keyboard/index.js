@@ -74,17 +74,19 @@ const keyLayout = [
   ],
 ];
 
-const Keyboard = () => {
+const Keyboard = ({onKeyFromKeyboard}) => {
   const [Key, setKey] = useState(null);
 
-  useEffect(() => {
-    const handleKeyDown = (event) => {
-      setKey(event.key);
-    };
-    const handleKeyUp = () => {
-      setKey(null);
-    };
+  const handleKeyDown = (event) => {
+    setKey(event.key.toUpperCase());
+    onKeyFromKeyboard(event.key.toUpperCase());
+  };
 
+  const handleKeyUp = () => {
+    setKey(null);
+  };
+
+  useEffect(() => {
     document.addEventListener('keydown', handleKeyDown);
     document.addEventListener('keyup', handleKeyUp);
 
@@ -93,6 +95,7 @@ const Keyboard = () => {
       document.removeEventListener('keyup', handleKeyUp);
     };
   }, []);
+
   return (
     <div className="p-4 w-1/2 mx-auto">
       {keyLayout.map((row, rowIndex) => (
